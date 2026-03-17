@@ -72,8 +72,8 @@ function Navbar() {
 }
 
 const WIDGET_SIZES = [
-  { label: "Banner (6:1)", aspect: "6/1", width: "100%" },
   { label: "Card (2:1)", aspect: "2/1", width: "100%" },
+  { label: "Banner (6:1)", aspect: "6/1", width: "100%" },
   { label: "Square (1:1)", aspect: "1/1", width: "50%" },
 ];
 function WidgetPage() {
@@ -102,15 +102,38 @@ function WidgetPage() {
           </select>
         </div>
         <div
-          className="relative overflow-hidden"
-          style={{ aspectRatio: size.aspect, width: size.width }}
+          className="overflow-hidden rounded-2xl bg-white shadow-md"
+          style={{ width: size.width }}
         >
-          <iframe
-            src="/app/widget"
-            title="Mini App"
-            allow="clipboard-write"
-            className="absolute inset-0 w-full h-full border-0"
-          />
+          {/* Header bar */}
+          <div className="flex items-center justify-between px-4 py-3 bg-[#131BEA]">
+            <div className="flex items-center gap-3">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white text-sm font-bold">
+                A
+              </div>
+              <span className="font-semibold text-white">Mini App</span>
+            </div>
+            <a
+              href="/app/"
+              className="rounded-lg bg-white px-4 py-1.5 text-sm font-semibold text-[#131BEA]"
+            >
+              Launch
+            </a>
+          </div>
+
+          {/* Widget iframe */}
+          <div
+            className="relative overflow-hidden"
+            style={{ aspectRatio: size.aspect }}
+          >
+            <iframe
+              src="/app/widget"
+              title="Mini App"
+              allow="clipboard-write"
+              className="absolute inset-0 w-full h-full border-0"
+            />
+            <div className="absolute inset-0" />
+          </div>
         </div>
       </div>
     </div>

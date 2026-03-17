@@ -1,6 +1,6 @@
 {
   "name": "@opencampus/ochub-harness",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "Test harness for OCID-authenticated mini apps",
   "type": "module",
   "bin": {

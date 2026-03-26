@@ -1,5 +1,42 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useOCAuth, LoginCallBack } from "@opencampus/ocid-connect-js";
+
+declare global {
+  interface Window {
+    __MINIAPP_URL__: string;
+  }
+}
+
+const MINIAPP_URL = window.__MINIAPP_URL__;
+
+const SANDBOX = [
+  "allow-scripts",
+  "allow-same-origin",
+  "allow-popups",
+  "allow-popups-to-escape-sandbox",
+  "allow-forms",
+  "allow-downloads",
+].join(" ");
+
+function buildAppSrc(
+  base: string,
+  path: string,
+  idToken?: string,
+  accessToken?: string,
+) {
+  const url = new URL(base);
+  if (path && path !== "/") {
+    url.pathname = url.pathname.replace(/\/$/, "") + path;
+  }
+  url.searchParams.set("oc_source", "hub");
+  if (idToken && accessToken) {
+    const params = new URLSearchParams();
+    params.set("id_token", idToken);
+    params.set("access_token", accessToken);
+    url.hash = params.toString();
+  }
+  return url.toString();
+}
 
 function Navbar() {
   const { authState, ocAuth } = useOCAuth();
@@ -77,8 +114,20 @@ const WIDGET_SIZES = [
   { label: "Square (1:1)", aspect: "1/1", width: "50%" },
 ];
 function WidgetPage() {
+  const { ocAuth, authState } = useOCAuth();
   const [sizeIndex, setSizeIndex] = useState(0);
   const size = WIDGET_SIZES[sizeIndex];
+
+  const widgetSrc = useMemo(
+    () =>
+      buildAppSrc(
+        MINIAPP_URL,
+        "/widget",
+        authState?.isAuthenticated ? ocAuth?.getIdToken?.() : undefined,
+        authState?.isAuthenticated ? ocAuth?.getAccessToken?.() : undefined,
+      ),
+    [ocAuth, authState?.isAuthenticated],
+  );
 
   return (
     <div className="flex flex-col min-h-screen bg-[#F6FBFF]">
@@ -114,7 +163,7 @@ function WidgetPage() {
               <span className="font-semibold text-white">Mini App</span>
             </div>
             <a
-              href="/app/"
+              href="/"
               className="rounded-lg bg-white px-4 py-1.5 text-sm font-semibold text-[#131BEA]"
             >
               Launch
@@ -127,9 +176,11 @@ function WidgetPage() {
             style={{ aspectRatio: size.aspect }}
           >
             <iframe
-              src="/app/widget"
+              src={widgetSrc}
               title="Mini App"
+              sandbox={SANDBOX}
               allow="clipboard-write"
+              referrerPolicy="strict-origin"
               className="absolute inset-0 w-full h-full border-0"
             />
             <div className="absolute inset-0" />
@@ -141,7 +192,18 @@ function WidgetPage() {
 }
 
 function App() {
-  const { isInitialized } = useOCAuth();
+  const { isInitialized, ocAuth, authState } = useOCAuth();
+
+  const appSrc = useMemo(
+    () =>
+      buildAppSrc(
+        MINIAPP_URL,
+        "/",
+        authState?.isAuthenticated ? ocAuth?.getIdToken?.() : undefined,
+        authState?.isAuthenticated ? ocAuth?.getAccessToken?.() : undefined,
+      ),
+    [ocAuth, authState?.isAuthenticated],
+  );
 
   if (!isInitialized) {
     return (
@@ -185,9 +247,11 @@ function App() {
     <div className="flex flex-col min-h-screen bg-[#F6FBFF]">
       <Navbar />
       <iframe
-        src="/app/"
+        src={appSrc}
         title="Mini App"
+        sandbox={SANDBOX}
         allow="clipboard-write"
+        referrerPolicy="strict-origin"
         className="flex-1 w-full max-w-xl mx-auto"
       />
     </div>

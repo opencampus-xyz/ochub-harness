@@ -13,9 +13,7 @@ createRoot(document.getElementById("root")!).render(
         loginEndPoint: "https://api.login.sandbox.opencampus.xyz/auth/login",
         publicKey:
           "MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEOxomYK47sSgtBHWluBqDwfBMouTSKmm0BriAXrmU75DjSkVcNbMW8zAGQrn5S9qaBBan9hk7BCwCopb5jxLAHQ",
-        domain: "localhost",
-        sameSite: false,
-        storageType: "cookie" as const,
+        storageType: "localStorage" as const,
       }}
       sandboxMode={true}
     >

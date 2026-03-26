@@ -2,7 +2,6 @@
 
 import { Command } from "commander";
 import express from "express";
-import proxy from "express-http-proxy";
 import { fileURLToPath } from "url";
 import { dirname, join } from "path";
 import { readFileSync } from "fs";
@@ -38,16 +37,14 @@ if (!url.startsWith("http://") && !url.startsWith("https://")) {
 
 const app = express();
 
-// Serve HTML harness for specific routes only
-const html = readFileSync(join(__dirname, "index.html"), "utf-8");
+// Inject the mini-app URL into the HTML so the frontend knows where to point iframes
+const html = readFileSync(join(__dirname, "index.html"), "utf-8").replace(
+  "</head>",
+  `<script>window.__MINIAPP_URL__=${JSON.stringify(url)}</script></head>`,
+);
 app.get(["/", "/redirect", "/widget"], (_req, res) => {
   res.type("html").send(html);
 });
-
-// Proxy all other paths to mini app
-const proxyMiddleware = proxy(url);
-app.use("/app", proxyMiddleware);
-app.use(proxyMiddleware);
 
 app.listen(port, () => {
   console.log(`\nLoading mini app: ${url}`);

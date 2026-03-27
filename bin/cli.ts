@@ -22,6 +22,10 @@ program
   .option("-p, --port <port>", "Port to run the server on", "8080")
   .parse(process.argv);
 
+const PREFIX = "@opencampus/ochub-harness";
+const log = (msg: string) => console.log(`${PREFIX}: ${msg}`);
+const logError = (msg: string) => console.error(`${PREFIX}: ${msg}`);
+
 const opts = program.opts();
 const port = parseInt(opts.port, 10);
 let url: string = opts.url;
@@ -31,7 +35,7 @@ if (url.startsWith("localhost:")) {
 }
 
 if (!url.startsWith("http://") && !url.startsWith("https://")) {
-  console.error("Error: URL must start with http:// or https://");
+  logError(`URL must start with http:// or https:// (got "${url}")`);
   process.exit(1);
 }
 
@@ -47,6 +51,6 @@ app.get(["/", "/redirect", "/widget"], (_req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`\nLoading mini app: ${url}`);
-  console.log(`OCID Mini App Harness running at http://localhost:${port}`);
+  log(`Hosting mini-app at ${url}`);
+  log(`Visit harness at http://localhost:${port}`);
 });

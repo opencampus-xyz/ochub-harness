@@ -155,20 +155,36 @@ function WidgetPage() {
           style={{ width: size.width }}
         >
           {/* Header bar */}
-          <div className="flex items-center justify-between px-4 py-3 bg-[#131BEA]">
+          <div className="flex items-center justify-between px-4 py-3">
             <div className="flex items-center gap-3">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/20 text-white text-sm font-bold">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#141beb]/10 text-[#141beb] text-sm font-bold">
                 A
               </div>
-              <span className="font-semibold text-white">Mini App</span>
+              <span className="font-bold text-gray-900">Mini App</span>
             </div>
             <a
               href="/"
-              className="rounded-lg bg-white px-4 py-1.5 text-sm font-semibold text-[#131BEA]"
+              className="flex items-center gap-1 rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-semibold text-[#141beb]"
             >
               Launch
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#00EDBE"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M7 17L17 7" />
+                <path d="M7 7h10v10" />
+              </svg>
             </a>
           </div>
+
+          {/* Divider (inset, not full width) */}
+          <div className="mx-4 border-t border-gray-100" />
 
           {/* Widget iframe */}
           <div
